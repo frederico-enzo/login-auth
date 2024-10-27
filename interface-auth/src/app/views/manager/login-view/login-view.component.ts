@@ -3,31 +3,32 @@ import { LoginService } from '../../../service/login-service/login.service';
 import { Login } from '../../../model/login-model/login';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from '../../../app.routes';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login-view',
-  standalone: true,
-  imports: [FormsModule],
   templateUrl: './login-view.component.html',
   styleUrl: './login-view.component.css'
 })
 export class LoginViewComponent {
-  loginService = inject(LoginService);
   login: Login = new Login();
-  roteador = inject(Router);
 
-  constructor() {
-    this.loginService.removeToken();
-  }
-
+  constructor(
+    private loginService: LoginService,
+    private router: Router
+  ) { }
+  
   logar() {
     this.loginService.logar(this.login).subscribe({
-      next: usuario => {localStorage.setItem("token", usuario.token),this.roteador.navigate(['admin/produtos']);
-    },
-      error: erro => {console.log(erro);
+      next: usuario => {
+        localStorage.setItem("token", usuario.token), this.router.navigate(['admin/']);
+      },
+      error: erro => {
+        console.log(erro);
       }
     });
-
-   
   }
 }
